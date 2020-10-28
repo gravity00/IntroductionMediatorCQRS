@@ -18,6 +18,11 @@ namespace IntroductionMediatorCQRS
             {
                 o.UseInMemoryDatabase("ApiDbContext");
             });
+
+            services.AddMediator(o =>
+            {
+                o.AddHandlersFromAssemblyOf<Startup>();
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
