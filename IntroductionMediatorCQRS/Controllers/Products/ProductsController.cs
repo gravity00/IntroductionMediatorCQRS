@@ -86,7 +86,10 @@ namespace IntroductionMediatorCQRS.Controllers.Products
         [HttpDelete("id:guid")]
         public async Task DeleteAsync([FromRoute] Guid id, CancellationToken ct)
         {
-            throw new NotImplementedException();
+            await _mediator.SendAsync(new DeleteProductCommand
+            {
+                ProductId = id
+            }, ct);
         }
     }
 }
