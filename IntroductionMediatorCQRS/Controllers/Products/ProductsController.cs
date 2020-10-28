@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using IntroductionMediatorCQRS.Handlers.Products;
@@ -21,7 +22,20 @@ namespace IntroductionMediatorCQRS.Controllers.Products
         [HttpGet]
         public async Task<IEnumerable<ProductModel>> SearchAsync([FromQuery] string filterQ, [FromQuery] int? skip, [FromQuery] int? take, CancellationToken ct)
         {
-            throw new NotImplementedException();
+            var result = await _mediator.FetchAsync(new SearchProductsQuery
+            {
+                FilterQ = filterQ,
+                Skip = skip,
+                Take = take
+            }, ct);
+
+            return result.Select(r => new ProductModel
+            {
+                Id = r.Id,
+                Code = r.Code,
+                Name = r.Name,
+                Price = r.Price
+            });
         }
 
         [HttpGet("id:guid")]
