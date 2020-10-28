@@ -10,10 +10,12 @@ namespace IntroductionMediatorCQRS.Handlers.Products
     public class DeleteProductCommandHandler : ICommandHandler<DeleteProductCommand>
     {
         private readonly ApiDbContext _context;
+        private readonly IMediator _mediator;
 
-        public DeleteProductCommandHandler(ApiDbContext context)
+        public DeleteProductCommandHandler(ApiDbContext context, IMediator mediator)
         {
             _context = context;
+            _mediator = mediator;
         }
 
         public async Task HandleAsync(DeleteProductCommand cmd, CancellationToken ct)
@@ -30,6 +32,11 @@ namespace IntroductionMediatorCQRS.Handlers.Products
             products.Remove(product);
 
             await _context.SaveChangesAsync(ct);
+
+            await _mediator.BroadcastAsync(new DeletedProductEvent
+            {
+                ProductId = cmd.ProductId
+            }, ct);
         }
     }
 }
