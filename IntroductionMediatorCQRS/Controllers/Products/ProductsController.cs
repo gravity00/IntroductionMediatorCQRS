@@ -74,7 +74,13 @@ namespace IntroductionMediatorCQRS.Controllers.Products
         [HttpPut("id:guid")]
         public async Task UpdateAsync([FromRoute] Guid id, [FromBody] UpdateProductModel model, CancellationToken ct)
         {
-            throw new NotImplementedException();
+            await _mediator.SendAsync(new UpdateProductCommand
+            {
+                ProductId = id,
+                Code = model.Code,
+                Name = model.Name,
+                Price = model.Price
+            }, ct);
         }
 
         [HttpDelete("id:guid")]
