@@ -27,12 +27,22 @@ namespace IntroductionMediatorCQRS.Controllers.Products
         [HttpGet("id:guid")]
         public async Task<ProductModel> GetByIdAsync([FromRoute] Guid id, CancellationToken ct)
         {
-            throw new NotImplementedException();
+            var result = await _mediator.FetchAsync(new GetProductByIdQuery
+            {
+                ProductId = id
+            }, ct);
+
+            return new ProductModel
+            {
+                Id = result.Id,
+                Code = result.Code,
+                Name = result.Name,
+                Price = result.Price
+            };
         }
 
         [HttpPost]
-        public async Task<CreateProductResultModel> CreateAsync([FromBody] CreateProductModel model,
-            CancellationToken ct)
+        public async Task<CreateProductResultModel> CreateAsync([FromBody] CreateProductModel model, CancellationToken ct)
         {
             var result = await _mediator.SendAsync(new CreateProductCommand
             {
