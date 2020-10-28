@@ -1,7 +1,8 @@
+using IntroductionMediatorCQRS.Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace IntroductionMediatorCQRS
 {
@@ -12,6 +13,11 @@ namespace IntroductionMediatorCQRS
             services.AddMvc();
 
             services.AddSwaggerGen();
+
+            services.AddDbContext<ApiDbContext>(o =>
+            {
+                o.UseInMemoryDatabase("ApiDbContext");
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
