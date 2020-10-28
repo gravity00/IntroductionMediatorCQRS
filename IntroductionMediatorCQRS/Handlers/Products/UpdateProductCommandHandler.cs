@@ -10,10 +10,12 @@ namespace IntroductionMediatorCQRS.Handlers.Products
     public class UpdateProductCommandHandler : ICommandHandler<UpdateProductCommand>
     {
         private readonly ApiDbContext _context;
+        private readonly IMediator _mediator;
 
-        public UpdateProductCommandHandler(ApiDbContext context)
+        public UpdateProductCommandHandler(ApiDbContext context, IMediator mediator)
         {
             _context = context;
+            _mediator = mediator;
         }
 
         public async Task HandleAsync(UpdateProductCommand cmd, CancellationToken ct)
@@ -27,11 +29,33 @@ namespace IntroductionMediatorCQRS.Handlers.Products
                 throw new InvalidOperationException($"Product '{cmd.ProductId}' not found");
             }
 
+            if (product.Code == cmd.Code &&
+                product.Name == cmd.Name &&
+                product.Price == cmd.Price)
+            {
+                return;
+            }
+
+            var previousCode = product.Code;
+            var previousName = product.Name;
+            var previousPrice = product.Price;
+
             product.Code = cmd.Code;
             product.Name = cmd.Name;
             product.Price = cmd.Price;
 
             await _context.SaveChangesAsync(ct);
+
+            await _mediator.BroadcastAsync(new UpdatedProductEvent
+            {
+                ProductId = cmd.ProductId,
+                PreviousCode = previousCode,
+                PreviousName = previousName,
+                PreviousPrice = previousPrice,
+                CurrentCode = product.Code,
+                CurrentName = product.Name,
+                CurrentPrice = product.Price
+            }, ct);
         }
     }
 }
