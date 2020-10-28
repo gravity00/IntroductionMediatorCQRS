@@ -10,10 +10,12 @@ namespace IntroductionMediatorCQRS.Handlers.Products
     public class CreateProductCommandHandler : ICommandHandler<CreateProductCommand, CreateProductResult>
     {
         private readonly ApiDbContext _context;
+        private readonly IMediator _mediator;
 
-        public CreateProductCommandHandler(ApiDbContext context)
+        public CreateProductCommandHandler(ApiDbContext context, IMediator mediator)
         {
             _context = context;
+            _mediator = mediator;
         }
 
         public async Task<CreateProductResult> HandleAsync(CreateProductCommand cmd, CancellationToken ct)
@@ -35,6 +37,14 @@ namespace IntroductionMediatorCQRS.Handlers.Products
             }, ct);
 
             await _context.SaveChangesAsync(ct);
+
+            await _mediator.BroadcastAsync(new CreatedProductEvent
+            {
+                ExternalId = externalId,
+                Code = cmd.Code,
+                Name = cmd.Name,
+                Price = cmd.Price
+            }, ct);
 
             return new CreateProductResult
             {
