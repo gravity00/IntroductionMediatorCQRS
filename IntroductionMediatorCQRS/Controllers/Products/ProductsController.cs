@@ -38,7 +38,7 @@ namespace IntroductionMediatorCQRS.Controllers.Products
             });
         }
 
-        [HttpGet("id:guid")]
+        [HttpGet("{id:guid}")]
         public async Task<ProductModel> GetByIdAsync([FromRoute] Guid id, CancellationToken ct)
         {
             var result = await _mediator.FetchAsync(new GetProductByIdQuery
@@ -71,7 +71,7 @@ namespace IntroductionMediatorCQRS.Controllers.Products
             };
         }
 
-        [HttpPut("id:guid")]
+        [HttpPut("{id:guid}")]
         public async Task UpdateAsync([FromRoute] Guid id, [FromBody] UpdateProductModel model, CancellationToken ct)
         {
             await _mediator.SendAsync(new UpdateProductCommand
@@ -83,7 +83,7 @@ namespace IntroductionMediatorCQRS.Controllers.Products
             }, ct);
         }
 
-        [HttpDelete("id:guid")]
+        [HttpDelete("{id:guid}")]
         public async Task DeleteAsync([FromRoute] Guid id, CancellationToken ct)
         {
             await _mediator.SendAsync(new DeleteProductCommand
