@@ -1,4 +1,5 @@
 using IntroductionMediatorCQRS.Database;
+using IntroductionMediatorCQRS.Pipelines;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,8 @@ namespace IntroductionMediatorCQRS
 
             services.AddMediator(o =>
             {
+                o.AddPipeline<LoggingPipeline>();
+
                 o.AddHandlersFromAssemblyOf<Startup>();
             });
         }
