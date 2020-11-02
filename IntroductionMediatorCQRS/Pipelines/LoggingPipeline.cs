@@ -10,6 +10,10 @@ namespace IntroductionMediatorCQRS.Pipelines
     public class LoggingPipeline : IPipeline
     {
         private readonly ILogger<LoggingPipeline> _logger;
+        private readonly JsonSerializerOptions _serializerOptions = new JsonSerializerOptions
+        {
+            WriteIndented = true
+        };
 
         public LoggingPipeline(ILogger<LoggingPipeline> logger)
         {
@@ -59,7 +63,7 @@ namespace IntroductionMediatorCQRS.Pipelines
         private void Log<T>(string message, T instance)
         {
             if (_logger.IsEnabled(LogLevel.Trace))
-                _logger.LogTrace(message, JsonSerializer.Serialize(instance));
+                _logger.LogTrace(message, JsonSerializer.Serialize(instance, _serializerOptions));
         }
     }
 }
