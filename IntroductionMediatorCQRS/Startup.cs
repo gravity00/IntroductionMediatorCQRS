@@ -23,6 +23,7 @@ namespace IntroductionMediatorCQRS
             services.AddMediator(o =>
             {
                 o.AddPipeline<LoggingPipeline>();
+                o.AddPipeline<TimeoutPipeline>();
 
                 o.AddHandlersFromAssemblyOf<Startup>();
             });
