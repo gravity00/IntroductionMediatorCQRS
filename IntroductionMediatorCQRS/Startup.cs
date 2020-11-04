@@ -29,11 +29,22 @@ namespace IntroductionMediatorCQRS
             {
                 o.AddPipeline<LoggingPipeline>();
                 o.AddPipeline<TimeoutPipeline>();
+
+                // comment if using SimpleSoft.Mediator.Microsoft.Extensions.ValidationPipeline
                 o.AddPipeline<ValidationPipeline>();
+
+                // remove comment if using SimpleSoft.Mediator.Microsoft.Extensions.ValidationPipeline
+                //o.AddPipelineForValidation(options =>
+                //{
+                //    options.ValidateCommand = true;
+                //    options.ValidateEvent = true;
+                //});
+                //o.AddValidatorsFromAssemblyOf<Startup>();
 
                 o.AddHandlersFromAssemblyOf<Startup>();
             });
 
+            // comment if using SimpleSoft.Mediator.Microsoft.Extensions.ValidationPipeline
             foreach (var implementationType in typeof(Startup)
                 .Assembly
                 .ExportedTypes

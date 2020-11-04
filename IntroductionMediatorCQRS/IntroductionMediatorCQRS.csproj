@@ -8,6 +8,7 @@
     <PackageReference Include="FluentValidation" Version="9.2.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.9" />
     <PackageReference Include="SimpleSoft.Mediator.Microsoft.Extensions" Version="2.0.0" />
+    <PackageReference Include="SimpleSoft.Mediator.Microsoft.Extensions.ValidationPipeline" Version="2.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
   </ItemGroup>
 
