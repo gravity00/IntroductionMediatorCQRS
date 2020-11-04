@@ -1,11 +1,14 @@
 using System.Linq;
+using System.Text;
+using System.Text.Json;
 using FluentValidation;
 using IntroductionMediatorCQRS.Database;
 using IntroductionMediatorCQRS.Pipelines;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace IntroductionMediatorCQRS
 {
@@ -26,6 +29,7 @@ namespace IntroductionMediatorCQRS
             {
                 o.AddPipeline<LoggingPipeline>();
                 o.AddPipeline<TimeoutPipeline>();
+                o.AddPipeline<ValidationPipeline>();
 
                 o.AddHandlersFromAssemblyOf<Startup>();
             });
@@ -47,6 +51,32 @@ namespace IntroductionMediatorCQRS
         public void Configure(IApplicationBuilder app)
         {
             app.UseDeveloperExceptionPage();
+
+            app.Use(async (ctx, next) =>
+            {
+                try
+                {
+                    await next();
+                }
+                catch (ValidationException e)
+                {
+                    var response = ctx.Response;
+                    if (response.HasStarted)
+                        throw;
+
+                    ctx.RequestServices
+                        .GetRequiredService<ILogger<Startup>>()
+                        .LogWarning(e, "Invalid data has been submitted");
+
+                    response.Clear();
+                    response.StatusCode = 422;
+                    await response.WriteAsync(JsonSerializer.Serialize(new
+                    {
+                        Message = "Invalid data has been submitted",
+                        ModelState = e.Errors.ToDictionary(error => error.ErrorCode, error => error.ErrorMessage)
+                    }), Encoding.UTF8, ctx.RequestAborted);
+                }
+            });
 
             app.UseSwagger();
 
