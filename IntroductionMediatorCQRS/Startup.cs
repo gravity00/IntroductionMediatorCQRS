@@ -1,3 +1,5 @@
+using System.Linq;
+using FluentValidation;
 using IntroductionMediatorCQRS.Database;
 using IntroductionMediatorCQRS.Pipelines;
 using Microsoft.AspNetCore.Builder;
@@ -27,9 +29,22 @@ namespace IntroductionMediatorCQRS
 
                 o.AddHandlersFromAssemblyOf<Startup>();
             });
+
+            foreach (var implementationType in typeof(Startup)
+                .Assembly
+                .ExportedTypes
+                .Where(t => t.IsClass && !t.IsAbstract))
+            {
+                foreach (var serviceType in implementationType
+                    .GetInterfaces()
+                    .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IValidator<>)))
+                {
+                    services.Add(new ServiceDescriptor(serviceType, implementationType, ServiceLifetime.Transient));
+                }
+            }
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
             app.UseDeveloperExceptionPage();
 
