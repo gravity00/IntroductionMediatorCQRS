@@ -25,38 +25,47 @@ namespace IntroductionMediatorCQRS
                 o.UseInMemoryDatabase("ApiDbContext");
             });
 
+            // registration using this project custom pipelines
             services.AddMediator(o =>
             {
                 o.AddPipeline<LoggingPipeline>();
                 o.AddPipeline<TimeoutPipeline>();
-
-                // comment if using SimpleSoft.Mediator.Microsoft.Extensions.ValidationPipeline
                 o.AddPipeline<ValidationPipeline>();
 
-                // remove comment if using SimpleSoft.Mediator.Microsoft.Extensions.ValidationPipeline
-                //o.AddPipelineForValidation(options =>
-                //{
-                //    options.ValidateCommand = true;
-                //    options.ValidateEvent = true;
-                //});
-                //o.AddValidatorsFromAssemblyOf<Startup>();
+                foreach (var implementationType in typeof(Startup)
+                    .Assembly
+                    .ExportedTypes
+                    .Where(t => t.IsClass && !t.IsAbstract))
+                {
+                    foreach (var serviceType in implementationType
+                        .GetInterfaces()
+                        .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IValidator<>)))
+                    {
+                        o.Services.Add(new ServiceDescriptor(serviceType, implementationType, ServiceLifetime.Transient));
+                    }
+                }
 
                 o.AddHandlersFromAssemblyOf<Startup>();
             });
 
-            // comment if using SimpleSoft.Mediator.Microsoft.Extensions.ValidationPipeline
-            foreach (var implementationType in typeof(Startup)
-                .Assembly
-                .ExportedTypes
-                .Where(t => t.IsClass && !t.IsAbstract))
-            {
-                foreach (var serviceType in implementationType
-                    .GetInterfaces()
-                    .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IValidator<>)))
-                {
-                    services.Add(new ServiceDescriptor(serviceType, implementationType, ServiceLifetime.Transient));
-                }
-            }
+            // registration using SimpleSoft.Mediator.Microsoft.Extensions.* pipelines
+            //services.AddMediator(o =>
+            //{
+            //    o.AddPipelineForLogging(options =>
+            //    {
+            //        options.LogCommandResult = true;
+            //        options.LogQueryResult = true;
+            //    });
+            //    o.AddPipeline<TimeoutPipeline>();
+            //    o.AddPipelineForValidation(options =>
+            //    {
+            //        options.ValidateCommand = true;
+            //        options.ValidateEvent = true;
+            //    });
+
+            //    o.AddValidatorsFromAssemblyOf<Startup>();
+            //    o.AddHandlersFromAssemblyOf<Startup>();
+            //});
         }
 
         public void Configure(IApplicationBuilder app)
