@@ -55,7 +55,7 @@ namespace IntroductionMediatorCQRS
                 o.AddHandlersFromAssemblyOf<Startup>();
             });
 
-            // registration using SimpleSoft.Mediator.Microsoft.Extensions.* pipelines
+            //registration using SimpleSoft.Mediator.Microsoft.Extensions.* pipelines
             //services.AddMediator(o =>
             //{
             //    o.AddPipelineForLogging(options =>
@@ -68,6 +68,10 @@ namespace IntroductionMediatorCQRS
             //    {
             //        options.ValidateCommand = true;
             //        options.ValidateEvent = true;
+            //    });
+            //    o.AddPipelineForEFCoreTransaction<ApiDbContext>(options =>
+            //    {
+            //        options.BeginTransactionOnCommand = true;
             //    });
 
             //    o.AddValidatorsFromAssemblyOf<Startup>();
