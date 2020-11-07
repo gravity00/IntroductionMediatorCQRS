@@ -31,7 +31,7 @@ namespace IntroductionMediatorCQRS.Handlers.Products
 
             products.Remove(product);
 
-            await _context.SaveChangesAsync(ct);
+            //await _context.SaveChangesAsync(ct);
 
             await _mediator.BroadcastAsync(new DeletedProductEvent
             {

@@ -44,7 +44,7 @@ namespace IntroductionMediatorCQRS.Handlers.Products
             product.Name = cmd.Name;
             product.Price = cmd.Price;
 
-            await _context.SaveChangesAsync(ct);
+            //await _context.SaveChangesAsync(ct);
 
             await _mediator.BroadcastAsync(new UpdatedProductEvent
             {

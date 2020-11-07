@@ -7,6 +7,7 @@ using IntroductionMediatorCQRS.Pipelines;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -22,7 +23,12 @@ namespace IntroductionMediatorCQRS
 
             services.AddDbContext<ApiDbContext>(o =>
             {
-                o.UseInMemoryDatabase("ApiDbContext");
+                o.UseInMemoryDatabase("ApiDbContext").ConfigureWarnings(warn =>
+                {
+                    // since InMemoryDatabase does not support transactions
+                    // for test purposes we are going to ignore this exception
+                    warn.Ignore(InMemoryEventId.TransactionIgnoredWarning);
+                });
             });
 
             // registration using this project custom pipelines
@@ -31,6 +37,7 @@ namespace IntroductionMediatorCQRS
                 o.AddPipeline<LoggingPipeline>();
                 o.AddPipeline<TimeoutPipeline>();
                 o.AddPipeline<ValidationPipeline>();
+                o.AddPipeline<TransactionPipeline>();
 
                 foreach (var implementationType in typeof(Startup)
                     .Assembly
