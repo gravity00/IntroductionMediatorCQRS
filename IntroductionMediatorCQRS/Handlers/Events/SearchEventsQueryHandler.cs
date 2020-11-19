@@ -33,13 +33,18 @@ namespace IntroductionMediatorCQRS.Handlers.Events
             var skip = query.Skip ?? 0;
             var take = query.Take ?? 20;
 
-            return await filter.OrderByDescending(e => e.CreatedOn).Skip(skip).Take(take).Select(e => new SearchEventsItem
-            {
-                Id = e.ExternalId,
-                Name = e.Name,
-                CreatedOn = e.CreatedOn,
-                CreatedBy = e.CreatedBy
-            }).ToListAsync(ct);
+            return await filter
+                .OrderByDescending(e => e.CreatedOn)
+                .ThenByDescending(e => e.Id)
+                .Skip(skip)
+                .Take(take)
+                .Select(e => new SearchEventsItem
+                {
+                    Id = e.ExternalId,
+                    Name = e.Name,
+                    CreatedOn = e.CreatedOn,
+                    CreatedBy = e.CreatedBy
+                }).ToListAsync(ct);
         }
     }
 }
