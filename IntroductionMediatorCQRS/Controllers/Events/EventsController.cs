@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,6 +36,24 @@ namespace IntroductionMediatorCQRS.Controllers.Events
                 CreatedOn = r.CreatedOn,
                 CreatedBy = r.CreatedBy
             });
+        }
+
+        [HttpGet("{id:guid}")]
+        public async Task<EventModel> GetByIdAsync([FromRoute] Guid id, CancellationToken ct)
+        {
+            var result = await _mediator.FetchAsync(new GetEventByIdQuery
+            {
+                EventId = id
+            }, ct);
+
+            return new EventModel
+            {
+                Id = result.Id,
+                Name = result.Name,
+                Payload = result.Payload,
+                CreatedOn = result.CreatedOn,
+                CreatedBy = result.CreatedBy
+            };
         }
     }
 }
