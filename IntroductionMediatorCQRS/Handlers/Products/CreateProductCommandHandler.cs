@@ -36,8 +36,6 @@ namespace IntroductionMediatorCQRS.Handlers.Products
                 Price = cmd.Price
             }, ct);
 
-            //await _context.SaveChangesAsync(ct);
-
             await _mediator.BroadcastAsync(new CreatedProductEvent
             {
                 ExternalId = externalId,
@@ -45,6 +43,8 @@ namespace IntroductionMediatorCQRS.Handlers.Products
                 Name = cmd.Name,
                 Price = cmd.Price
             }, ct);
+
+            //await _context.SaveChangesAsync(ct);
 
             return new CreateProductResult
             {

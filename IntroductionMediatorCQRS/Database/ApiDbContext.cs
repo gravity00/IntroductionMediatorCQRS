@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace IntroductionMediatorCQRS.Database
 {
@@ -30,6 +31,25 @@ namespace IntroductionMediatorCQRS.Database
                     .HasMaxLength(128);
                 cfg.Property(e => e.Price)
                     .IsRequired();
+            });
+
+            builder.Entity<EventEntity>(cfg =>
+            {
+                cfg.HasKey(e => e.Id);
+                cfg.HasAlternateKey(e => e.ExternalId);
+
+                cfg.HasIndex(e => e.CreatedOn);
+
+                cfg.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(128);
+                cfg.Property(e => e.Payload)
+                    .IsRequired();
+                cfg.Property(e => e.CreatedOn)
+                    .IsRequired();
+                cfg.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasMaxLength(128);
             });
         }
     }

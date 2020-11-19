@@ -44,8 +44,6 @@ namespace IntroductionMediatorCQRS.Handlers.Products
             product.Name = cmd.Name;
             product.Price = cmd.Price;
 
-            //await _context.SaveChangesAsync(ct);
-
             await _mediator.BroadcastAsync(new UpdatedProductEvent
             {
                 ProductId = cmd.ProductId,
@@ -56,6 +54,8 @@ namespace IntroductionMediatorCQRS.Handlers.Products
                 CurrentName = product.Name,
                 CurrentPrice = product.Price
             }, ct);
+
+            //await _context.SaveChangesAsync(ct);
         }
     }
 }

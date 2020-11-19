@@ -31,12 +31,12 @@ namespace IntroductionMediatorCQRS.Handlers.Products
 
             products.Remove(product);
 
-            //await _context.SaveChangesAsync(ct);
-
             await _mediator.BroadcastAsync(new DeletedProductEvent
             {
                 ProductId = cmd.ProductId
             }, ct);
+
+            //await _context.SaveChangesAsync(ct);
         }
     }
 }

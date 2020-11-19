@@ -6,21 +6,21 @@ using SimpleSoft.Mediator;
 
 namespace IntroductionMediatorCQRS.Handlers.Products
 {
-    public class CreatedProductEventHandler : IEventHandler<CreatedProductEvent>
+    public class UpdatedProductEventHandler : IEventHandler<UpdatedProductEvent>
     {
         private readonly ApiDbContext _context;
 
-        public CreatedProductEventHandler(ApiDbContext context)
+        public UpdatedProductEventHandler(ApiDbContext context)
         {
             _context = context;
         }
 
-        public async Task HandleAsync(CreatedProductEvent evt, CancellationToken ct)
+        public async Task HandleAsync(UpdatedProductEvent evt, CancellationToken ct)
         {
             await _context.Set<EventEntity>().AddAsync(new EventEntity
             {
                 ExternalId = evt.Id,
-                Name = nameof(CreatedProductEvent),
+                Name = nameof(UpdatedProductEvent),
                 Payload = JsonSerializer.Serialize(evt),
                 CreatedOn = evt.CreatedOn,
                 CreatedBy = evt.CreatedBy
