@@ -52,7 +52,8 @@ namespace IntroductionMediatorCQRS.Handlers.Products
                 PreviousPrice = previousPrice,
                 CurrentCode = product.Code,
                 CurrentName = product.Name,
-                CurrentPrice = product.Price
+                CurrentPrice = product.Price,
+                CreatedBy = cmd.CreatedBy
             }, ct);
 
             //await _context.SaveChangesAsync(ct);

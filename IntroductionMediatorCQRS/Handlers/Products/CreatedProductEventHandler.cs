@@ -15,16 +15,18 @@ namespace IntroductionMediatorCQRS.Handlers.Products
             _context = context;
         }
 
-        public async Task HandleAsync(CreatedProductEvent evt, CancellationToken ct)
+        public Task HandleAsync(CreatedProductEvent evt, CancellationToken ct)
         {
-            await _context.Set<EventEntity>().AddAsync(new EventEntity
-            {
-                ExternalId = evt.Id,
-                Name = nameof(CreatedProductEvent),
-                Payload = JsonSerializer.Serialize(evt),
-                CreatedOn = evt.CreatedOn,
-                CreatedBy = evt.CreatedBy
-            }, ct);
+            //await _context.Set<EventEntity>().AddAsync(new EventEntity
+            //{
+            //    ExternalId = evt.Id,
+            //    Name = nameof(CreatedProductEvent),
+            //    Payload = JsonSerializer.Serialize(evt),
+            //    CreatedOn = evt.CreatedOn,
+            //    CreatedBy = evt.CreatedBy
+            //}, ct);
+
+            return Task.CompletedTask;
         }
     }
 }

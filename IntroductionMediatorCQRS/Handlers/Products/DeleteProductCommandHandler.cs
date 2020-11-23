@@ -33,7 +33,8 @@ namespace IntroductionMediatorCQRS.Handlers.Products
 
             await _mediator.BroadcastAsync(new DeletedProductEvent
             {
-                ProductId = cmd.ProductId
+                ProductId = cmd.ProductId,
+                CreatedBy = cmd.CreatedBy
             }, ct);
 
             //await _context.SaveChangesAsync(ct);

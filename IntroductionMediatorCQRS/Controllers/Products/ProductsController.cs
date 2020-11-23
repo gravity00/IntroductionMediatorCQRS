@@ -26,7 +26,8 @@ namespace IntroductionMediatorCQRS.Controllers.Products
             {
                 FilterQ = filterQ,
                 Skip = skip,
-                Take = take
+                Take = take,
+                CreatedBy = User.Identity.Name
             }, ct);
 
             return result.Select(r => new ProductModel
@@ -43,7 +44,8 @@ namespace IntroductionMediatorCQRS.Controllers.Products
         {
             var result = await _mediator.FetchAsync(new GetProductByIdQuery
             {
-                ProductId = id
+                ProductId = id,
+                CreatedBy = User.Identity.Name
             }, ct);
 
             return new ProductModel
@@ -62,7 +64,8 @@ namespace IntroductionMediatorCQRS.Controllers.Products
             {
                 Code = model.Code,
                 Name = model.Name,
-                Price = model.Price
+                Price = model.Price,
+                CreatedBy = User.Identity.Name
             }, ct);
 
             return new CreateProductResultModel
@@ -79,7 +82,8 @@ namespace IntroductionMediatorCQRS.Controllers.Products
                 ProductId = id,
                 Code = model.Code,
                 Name = model.Name,
-                Price = model.Price
+                Price = model.Price,
+                CreatedBy = User.Identity.Name
             }, ct);
         }
 
@@ -88,7 +92,8 @@ namespace IntroductionMediatorCQRS.Controllers.Products
         {
             await _mediator.SendAsync(new DeleteProductCommand
             {
-                ProductId = id
+                ProductId = id,
+                CreatedBy = User.Identity.Name
             }, ct);
         }
     }

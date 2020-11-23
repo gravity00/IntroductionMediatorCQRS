@@ -41,7 +41,8 @@ namespace IntroductionMediatorCQRS.Handlers.Products
                 ExternalId = externalId,
                 Code = cmd.Code,
                 Name = cmd.Name,
-                Price = cmd.Price
+                Price = cmd.Price,
+                CreatedBy = cmd.CreatedBy
             }, ct);
 
             //await _context.SaveChangesAsync(ct);
