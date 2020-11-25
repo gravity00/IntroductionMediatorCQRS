@@ -38,6 +38,7 @@ namespace IntroductionMediatorCQRS
                 o.AddPipeline<TimeoutPipeline>();
                 o.AddPipeline<ValidationPipeline>();
                 o.AddPipeline<TransactionPipeline>();
+                o.AddPipeline<AuditPipeline>();
 
                 foreach (var implementationType in typeof(Startup)
                     .Assembly
@@ -55,7 +56,7 @@ namespace IntroductionMediatorCQRS
                 o.AddHandlersFromAssemblyOf<Startup>();
             });
 
-            //registration using SimpleSoft.Mediator.Microsoft.Extensions.* pipelines
+            // or, if using the SimpleSoft.Mediator.Microsoft.Extensions.* pipelines
             //services.AddMediator(o =>
             //{
             //    o.AddPipelineForLogging(options =>
@@ -73,6 +74,7 @@ namespace IntroductionMediatorCQRS
             //    {
             //        options.BeginTransactionOnCommand = true;
             //    });
+            //    o.AddPipeline<AuditPipeline>();
 
             //    o.AddValidatorsFromAssemblyOf<Startup>();
             //    o.AddHandlersFromAssemblyOf<Startup>();

@@ -1,5 +1,4 @@
 ﻿using System;
-using SimpleSoft.Mediator;
 
 namespace IntroductionMediatorCQRS.Handlers.Products
 {

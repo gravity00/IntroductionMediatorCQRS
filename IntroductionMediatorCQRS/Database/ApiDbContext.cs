@@ -21,6 +21,9 @@ namespace IntroductionMediatorCQRS.Database
 
                 cfg.HasIndex(e => e.Code).IsUnique();
 
+                cfg.Property(e => e.Id)
+                    .IsRequired()
+                    .ValueGeneratedOnAdd();
                 cfg.Property(e => e.ExternalId)
                     .IsRequired();
                 cfg.Property(e => e.Code)
@@ -33,6 +36,32 @@ namespace IntroductionMediatorCQRS.Database
                     .IsRequired();
             });
 
+            builder.Entity<CommandEntity>(cfg =>
+            {
+                cfg.HasKey(e => e.Id);
+                cfg.HasAlternateKey(e => e.ExternalId);
+
+                cfg.HasIndex(e => e.CreatedOn);
+
+                cfg.Property(e => e.Id)
+                    .IsRequired()
+                    .ValueGeneratedOnAdd();
+                cfg.Property(e => e.ExternalId)
+                    .IsRequired();
+                cfg.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(128);
+                cfg.Property(e => e.Payload)
+                    .IsRequired();
+                cfg.Property(e => e.Result);
+                cfg.Property(e => e.CreatedOn)
+                    .IsRequired();
+                cfg.Property(e => e.CreatedBy)
+                    .HasMaxLength(128);
+                cfg.Property(e => e.ExecutionTime)
+                    .IsRequired();
+            });
+
             builder.Entity<EventEntity>(cfg =>
             {
                 cfg.HasKey(e => e.Id);
@@ -40,6 +69,15 @@ namespace IntroductionMediatorCQRS.Database
 
                 cfg.HasIndex(e => e.CreatedOn);
 
+                cfg.Property(e => e.Id)
+                    .IsRequired()
+                    .ValueGeneratedOnAdd();
+                cfg.HasOne<CommandEntity>()
+                    .WithMany()
+                    .HasForeignKey(e => e.CommandId)
+                    .IsRequired();
+                cfg.Property(e => e.ExternalId)
+                    .IsRequired();
                 cfg.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(128);
@@ -48,7 +86,6 @@ namespace IntroductionMediatorCQRS.Database
                 cfg.Property(e => e.CreatedOn)
                     .IsRequired();
                 cfg.Property(e => e.CreatedBy)
-                    .IsRequired()
                     .HasMaxLength(128);
             });
         }

@@ -1,6 +1,4 @@
-﻿using SimpleSoft.Mediator;
-
-namespace IntroductionMediatorCQRS.Handlers.Products
+﻿namespace IntroductionMediatorCQRS.Handlers.Products
 {
     public class CreateProductCommand : Command<CreateProductResult>
     {

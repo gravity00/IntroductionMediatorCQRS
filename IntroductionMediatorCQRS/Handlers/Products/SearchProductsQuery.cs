@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using SimpleSoft.Mediator;
 
 namespace IntroductionMediatorCQRS.Handlers.Products
 {
